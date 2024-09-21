@@ -2,11 +2,13 @@ import {Route, Routes} from "react-router-dom";
 import Login from "./components/Login";
 import Create from "./components/Create";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <Login />
-      <Create />
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route path="/create" element={<Create />} />
+      </Routes>
     </div>
   );
 }
