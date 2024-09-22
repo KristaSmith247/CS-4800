@@ -1,6 +1,7 @@
 import "./Create.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {ReactSession} from "react-client-session";
 
 export default function Create() {
 	const [form, setForm] = useState({
@@ -22,6 +23,11 @@ export default function Create() {
 		e.preventDefault();
 		// let passwordCheck = 1;
 		console.log("In onSubmit");
+
+		ReactSession.setStoreType("sessionStorage");
+		ReactSession.set("username", form.username);
+		console.log("Username: " +ReactSession.get("username"));
+
 		console.log(form);
 
 		// check to make sure passwords match
@@ -40,13 +46,14 @@ export default function Create() {
 		const response = await fetch("http://localhost:4000/create", {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/json",
+			  "Content-Type": "application/json",
 			},
 			body: JSON.stringify(newAccount),
-		}).catch((error) => {
-			window.alert(error);
-			return;
-		});
+		  })
+			.catch(error => {
+			  window.alert(error);
+			  return;
+			});
 
 		const account = await response.json();
 
