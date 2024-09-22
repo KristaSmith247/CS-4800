@@ -15,7 +15,7 @@ accountRoutes.route("/accounts").get(async (req, res) => {
     try {
         let db_connect = dbo.getDb("language-app");
         // the following line will return all information about an account except for the password
-        const result = await db_connect.collection("accounts").find({}).project({ password: 0 }).toArray();
+        const result = await db_connect.collection("accounts").find({}).toArray();
         res.json(result);
     } catch (err) {
         throw err;
