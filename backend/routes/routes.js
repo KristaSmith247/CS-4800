@@ -111,7 +111,7 @@ accountRoutes.route("/record/:emailAddress").post(async (req, res) => {
 });
 
 // This section will help you create a new record.
-accountRoutes.route("/record/add").post(async (req, res) => {
+accountRoutes.route("/account/add").post(async (req, res) => {
     try {
         let db_connect = dbo.getDb();
         // verify if email already in database
@@ -123,18 +123,13 @@ accountRoutes.route("/record/add").post(async (req, res) => {
         }
         else {
             let myobj = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                emailAddress: req.body.emailAddress,
-                phone: req.body.phone,
+                username: req.body.username,
                 password: req.body.password,
-                role: "", // role is blank for now
-                checking: 0, // account starts at 0
-                savings: 0,
-                accountType: req.body.accountType // tells if checking or savings account
+                type: "", // role is blank for now
+                
             };
 
-            const result = db_connect.collection("records").insertOne(myobj);
+            const result = db_connect.collection("accounts").insertOne(myobj);
             console.log("Created an account");
             res.json(result);
         }
