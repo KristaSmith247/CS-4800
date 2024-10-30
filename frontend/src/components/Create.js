@@ -2,6 +2,7 @@ import "./Create.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { ReactSession } from "react-client-session";
 
 export default function Create() {
 	const [form, setForm] = useState({
@@ -25,6 +26,11 @@ export default function Create() {
 		let usernameCheck, passwordCheck, typeCheck = 1;
 
 		console.log("In onSubmit");
+
+		ReactSession.setStoreType("sessionStorage");
+		ReactSession.set("username", form.username);
+		console.log("Username: " + ReactSession.get("username"));
+
 		console.log(form);
 
 		// username check

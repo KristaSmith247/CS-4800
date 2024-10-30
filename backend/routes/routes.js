@@ -1,10 +1,13 @@
-
 const express = require("express");
 const crypto = require("crypto"); // used for passwords
+
+// accountRoutes is an instance of the express router.
+// We use it to define our routes.
+// The router will be added as a middleware and will take control of requests starting with path /record.
 const accountRoutes = express.Router();
 
 // This will help us connect to the database
-const dbo = require("../database/conn");
+const dbo = require("../db/conn");
 
 // This helps convert the id from string to ObjectId for the _id.
 const ObjectId = require("mongodb").ObjectId;
@@ -29,6 +32,30 @@ accountRoutes.route("/accounts").get(async (req, res) => {
     }
 });
 
+// Login route
+accountRoutes.route("/accounts/login").post(async (req, res) => {
+	try {
+		let db_connect = dbo.getDb();
+		let myobj = {
+			username: req.body.username,
+			password: req.body.password,
+			type: "",
+		};
+		const checkUserAndPassword = await db_connect
+			.collection("accounts")
+			.findOne({ username: myobj.username, password: myobj.password });
+		if (!checkUserAndPassword) {
+			console.log("Error: no user found");
+			message = { message: "Error: No user" };
+			res.json(message);
+		} else {
+			message = { message: "Success" };
+			res.json(checkUserAndPassword);
+		}
+	} catch (err) {
+		throw err;
+	}
+});
 
 // This section will help you create a new record.
 accountRoutes.route("/accounts/create").post(async (req, res) => {

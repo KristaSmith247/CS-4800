@@ -1,3 +1,4 @@
+// This file will create the server
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -5,7 +6,7 @@ const cors = require("cors");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
 
-require("dotenv").config({ path: "./config.env" });
+require("dotenv").config({ path: "./config.env"});
 
 app.use(cors({
 	origin: "http://localhost:3000",
@@ -24,7 +25,7 @@ app.use(session({
 	})
 }));
 
-const dbo = require("./database/conn");
+const dbo = require("./db/conn");
 
 app.use(express.json());
 
@@ -44,4 +45,3 @@ app.listen(port, () => {
 	});
 	console.log(`Server is running on port ${port}`);
 });
-
