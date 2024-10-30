@@ -1,13 +1,15 @@
 import "./Create.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export default function Create() {
 	const [form, setForm] = useState({
 		username: "",
 		password: "",
-		// confirmPassword: "",
+		confirmPassword: "",
 		type: "",
+		message: "", // return if sucessful or error
 	});
 	const [invalidMessage, setInvalidMessage] = useState("");
 	const navigate = useNavigate();
@@ -20,45 +22,66 @@ export default function Create() {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-		// let passwordCheck = 1;
+		let usernameCheck, passwordCheck, typeCheck = 1;
+
 		console.log("In onSubmit");
 		console.log(form);
 
-		// check to make sure passwords match
-		// if (form.password.toString() === form.confirmPassword.toString()) {
-		//     passwordCheck = 0;
-		// } else {
-		//     console.log("Password error");
-		//     setInvalidMessage("Passwords must match");
-		//     passwordCheck = 1;
-		// }
-
-		// if(passwordCheck === 0) {
-		const newAccount = { ...form };
-		delete newAccount.message;
-
-		const response = await fetch("http://localhost:4000/create", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(newAccount),
-		}).catch((error) => {
-			window.alert(error);
-			return;
-		});
-
-		const account = await response.json();
-
-		console.log("From create: " + account.insertedId);
-		setForm({ username: "", password: "", type: "" });
-
-		if (account.message == null) {
-			navigate(-1);
+		// username check
+		if (!form.username) {
+			usernameCheck = 1;
+			setInvalidMessage("Please enter a username");
 		} else {
-			console.log("There is an error");
+			usernameCheck = 0;
 		}
-		//}
+
+		if (!form.type) {
+			form.type = "general";
+			console.log("Set form to general");
+			typeCheck = 0;
+		}
+
+		// check to make sure passwords match
+		if (form.password.value === form.confirmPassword.value) {
+			passwordCheck = 0;
+		} else {
+			console.log("Password error");
+			setInvalidMessage("Passwords must match");
+			passwordCheck = 1;
+		}
+
+		if (passwordCheck === 0) {
+			const newAccount = { ...form };
+			delete newAccount.message;
+
+			const response = await fetch("http://localhost:4000/accounts/create", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(newAccount),
+			}).catch((error) => {
+				window.alert(error);
+				return;
+			});
+
+			const account = await response.json();
+
+			// axios.post('', {username, password, type})
+			// .then(result => console.log(result))
+			// .catch(err => console.log(err))
+
+			console.log("From create: ");
+			console.log(account.username);
+			setForm({ username: "", password: "", type: "" });
+
+			if (account.message == null) {
+				//navigate(-1);
+				console.log("Acconut message null");
+			} else {
+				console.log("There is an error");
+			}
+		}
 	}
 
 	return (
@@ -71,6 +94,7 @@ export default function Create() {
 				<input
 					type="text"
 					placeholder="Please enter username"
+					name="username"
 					onChange={(e) => updateForm({ username: e.target.value })}
 					required
 				/>
@@ -85,9 +109,9 @@ export default function Create() {
 					required
 				/>
 
-				{/* <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
-            <input type="text" placeholder="Please confirm password" 
-            onChange={(e) => updateForm(e)} required/> */}
+				<label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+				<input type="text" placeholder="Please confirm password"
+					onChange={(e) => updateForm({ confirmPassword: e.target.value })} required />
 
 				<label htmlFor="type" className="form-label">
 					Account Type
@@ -96,14 +120,16 @@ export default function Create() {
 					name="type"
 					id="type"
 					onChange={(e) => updateForm({ type: e.target.value })}
+					selected="selected"
 				>
-					<option value="business">Business</option>
 					<option value="general">General</option>
+					<option value="business">Business</option>
 					<option value="student">Student</option>
 					<option value="travel">Travel</option>
 				</select>
 				<br />
-				<input type="submit" value="Create Account" />
+				{/* <input type="submit" value="Create Account" /> */}
+				<button type="submit" value="Create Account" onClick={handleSubmit}>Create Account</button>
 			</form>
 			{invalidMessage}
 		</div>

@@ -7,6 +7,7 @@ function Login() {
 	const [form, setForm] = useState({
 		username: "",
 		password: "",
+		message: "",
 	});
 	const [invalidMessage, setInvalidMessage] = useState("");
 
@@ -37,9 +38,9 @@ function Login() {
 
 		const account = await response.json();
 
-		setForm({ username: "", password: "", message: user.message });
+		setForm({ username: "", password: "", message: account.message });
 
-		if (user.message == null) {
+		if (account.message == null) {
 			localStorage.setItem("username", account._id);
 			localStorage.setItem("type", account.type);
 
@@ -59,12 +60,14 @@ function Login() {
 				<label htmlFor="username" className="form-label">
 					Username
 				</label>
-				<input type="text" placeholder="Please enter username" />
+				<input type="text" placeholder="Please enter username"
+					value={form.username} onChange={(e) => updateForm({ username: e.target.value })} />
 
 				<label htmlFor="password" className="form-label">
 					Password
 				</label>
-				<input type="text" placeholder="Please enter password" />
+				<input type="text" placeholder="Please enter password"
+					value={form.password} onChange={(e) => updateForm({ password: e.target.value })} />
 
 				<br />
 
