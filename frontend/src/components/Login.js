@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
-function Login() {
+
+export default function Login() {
 	const [form, setForm] = useState({
 		username: "",
 		password: "",
@@ -53,39 +54,38 @@ function Login() {
 			setInvalidMessage(
 				"Invalid username or password. Please enter and try again."
 			);
-		}
+		}; // end of account
+	}; // end of onSubmit function
 
-		return (
-			<div className="container">
-				<h3>Login</h3>
-				<form onSubmit={onSubmit}>
-					<label htmlFor="username" className="form-label">
-						Username
-					</label>
-					<input type="text" placeholder="Please enter username"
-						value={form.username} onChange={(e) => updateForm({ username: e.target.value })} />
+	return (
+		<div className="container">
+			<h3>Login</h3>
+			<form onSubmit={onSubmit}>
+				<label htmlFor="username" className="form-label">
+					Username
+				</label>
+				<input type="text" placeholder="Please enter username"
+					value={form.username} onChange={(e) => updateForm({ username: e.target.value })} />
 
-					<label htmlFor="password" className="form-label">
-						Password
-					</label>
-					<input type="text" placeholder="Please enter password"
-						value={form.password} onChange={(e) => updateForm({ password: e.target.value })} />
+				<label htmlFor="password" className="form-label">
+					Password
+				</label>
+				<input type="text" placeholder="Please enter password"
+					value={form.password} onChange={(e) => updateForm({ password: e.target.value })} />
 
-					<br />
-
-					<button type="submit">Submit</button>
-				</form>
-				{invalidMessage}
 				<br />
-				<label>Don't have an account?</label>
-				<button>
-					<a href="/create">Sign Up</a>
-				</button>
-				<div className="footer">
-					<p>Copyright &copy; 2024 Language App</p>
-				</div>
-			</div>
-		);
-	}
 
-	export default Login;
+				<button type="submit">Submit</button>
+			</form>
+			{invalidMessage}
+			<br />
+			<label>Don't have an account?</label>
+			<button>
+				<a href="/create">Sign Up</a>
+			</button>
+			<div className="footer">
+				<p>Copyright &copy; 2024 Language App</p>
+			</div>
+		</div>
+	); // end of return
+} // end of function

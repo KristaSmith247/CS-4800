@@ -2,7 +2,7 @@ import "./Create.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { ReactSession } from "react-client-session";
+//import { ReactSession } from "react-client-session";
 
 export default function Create() {
 	const [form, setForm] = useState({
