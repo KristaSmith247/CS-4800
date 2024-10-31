@@ -23,15 +23,6 @@ export default function Login() {
 	async function onSubmit(e) {
 		e.preventDefault();
 
-		const sha256 = require('js-sha256');
-		const toBeHashed = form.password;
-		console.log("To be hashed: " + toBeHashed);
-		const hash = sha256(toBeHashed);
-		console.log("Here's my hash: " + hash);
-
-		// change the form password to what the hashed version is
-		form.password = hash;
-
 		const existingAccount = { ...form };
 		console.log(form);
 		const response = await fetch("http://localhost:4000/accounts/login", {
