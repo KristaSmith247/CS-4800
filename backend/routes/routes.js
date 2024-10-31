@@ -17,10 +17,11 @@ function createAccountId() {
     return Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 }
 
+
 // This section will help you get a list of all the records.
 accountRoutes.route("/accounts").get(async (req, res) => {
     try {
-        let db_connect = dbo.getDb("language-app");
+        let db_connect = dbo.getDb("languageApp");
         // the following line will return all information about an account except for the password
         const result = await db_connect.collection("accounts")
             .find({})
@@ -34,27 +35,28 @@ accountRoutes.route("/accounts").get(async (req, res) => {
 
 // Login route
 accountRoutes.route("/accounts/login").post(async (req, res) => {
-	try {
-		let db_connect = dbo.getDb();
-		let myobj = {
-			username: req.body.username,
-			password: req.body.password,
-			type: "",
-		};
-		const checkUserAndPassword = await db_connect
-			.collection("accounts")
-			.findOne({ username: myobj.username, password: myobj.password });
-		if (!checkUserAndPassword) {
-			console.log("Error: no user found");
-			message = { message: "Error: No user" };
-			res.json(message);
-		} else {
-			message = { message: "Success" };
-			res.json(checkUserAndPassword);
-		}
-	} catch (err) {
-		throw err;
-	}
+    try {
+        let db_connect = dbo.getDb();
+        let hashedPassword = crypto.createHash('sha256').update(req.body.password).digest('hex');
+        let myobj = {
+            username: req.body.username,
+            password: hashedPassword,
+            type: "",
+        };
+        const checkUserAndPassword = await db_connect
+            .collection("accounts")
+            .findOne({ username: myobj.username, password: myobj.password });
+        if (!checkUserAndPassword) {
+            console.log("Error: no user found");
+            message = { message: "Error: No user" };
+            res.json(message);
+        } else {
+            message = { message: "Success" };
+            res.json(checkUserAndPassword);
+        }
+    } catch (err) {
+        throw err;
+    }
 });
 
 // This section will help you create a new record.
@@ -65,7 +67,7 @@ accountRoutes.route("/accounts/create").post(async (req, res) => {
         let accountId = createAccountId();
         let myobj = {
             username: req.body.username,
-            password: req.body.password,
+            password: hashedPassword,
             type: req.body.type,
             accountId: accountId
         };
