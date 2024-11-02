@@ -23,14 +23,14 @@ export default function Login() {
 	async function onSubmit(e) {
 		e.preventDefault();
 
-		const sha256 = require('js-sha256');
-		const toBeHashed = form.password;
-		console.log("To be hashed: " + toBeHashed);
-		const hash = sha256(toBeHashed);
-		console.log("Here's my hash: " + hash);
+		// const sha256 = require('js-sha256');
+		// const toBeHashed = form.password;
+		// console.log("To be hashed: " + toBeHashed);
+		// const hash = sha256(toBeHashed);
+		// console.log("Here's my hash: " + hash);
 
 		// change the form password to what the hashed version is
-		form.password = hash;
+		//form.password = hash;
 
 		const existingAccount = { ...form };
 		console.log(form);
@@ -48,21 +48,19 @@ export default function Login() {
 
 		const account = await response.json();
 
+		if (account.message == null) {
+			localStorage.setItem("username", account._id);
+			localStorage.setItem("type", account.type);
+
+			console.log("Logged in successfully");
+			navigate("/account/" + account._id);
+		}; // end of account
+
+		setInvalidMessage(
+			"Invalid username or password. Please enter and try again."
+		);
 		setForm({ username: "", password: "", message: account.message });
 
-		if (account.message == null) {
-			if (account.message == null) {
-				localStorage.setItem("username", account._id);
-				localStorage.setItem("type", account.type);
-
-				console.log("Logged in successfully");
-				navigate("/account/" + account._id);
-			}
-
-			setInvalidMessage(
-				"Invalid username or password. Please enter and try again."
-			);
-		}; // end of account
 	}; // end of onSubmit function
 
 	return (
@@ -85,7 +83,7 @@ export default function Login() {
 
 				<button type="submit">Submit</button>
 			</form>
-			{invalidMessage}
+			<label>{invalidMessage}</label>
 			<br />
 			<label>Don't have an account?</label>
 			<button>

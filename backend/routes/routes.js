@@ -87,29 +87,29 @@ accountRoutes.route("/accounts/create").post(async (req, res) => {
 });
 
 // Login route
-accountRoutes.route("/accounts/login").post(async (req, res) => {
-    try {
-        let db_connect = dbo.getDb();
-        let myobj = {
-            username: req.body.username,
-            password: req.body.password,
-            type: "",
-        };
-        const checkUserAndPassword = await db_connect
-            .collection("accounts")
-            .findOne({ username: myobj.username, password: myobj.password });
-        if (!checkUserAndPassword) {
-            console.log("Error: no user found");
-            message = { message: "Error: No user" };
-            res.json(message);
-        } else {
-            message = { message: "Success" };
-            res.json(checkUserAndPassword);
-        }
-    } catch (err) {
-        throw err;
-    }
-});
+// accountRoutes.route("/accounts/login").post(async (req, res) => {
+//     try {
+//         let db_connect = dbo.getDb();
+//         let myobj = {
+//             username: req.body.username,
+//             password: req.body.password,
+//             type: "",
+//         };
+//         const checkUserAndPassword = await db_connect
+//             .collection("accounts")
+//             .findOne({ username: myobj.username, password: myobj.password });
+//         if (!checkUserAndPassword) {
+//             console.log("Error: no user found");
+//             message = { message: "Error: No user" };
+//             res.json(message);
+//         } else {
+//             message = { message: "Success" };
+//             res.json(checkUserAndPassword);
+//         }
+//     } catch (err) {
+//         throw err;
+//     }
+// });
 
 // Fetch single account by id
 accountRoutes.route("/accounts/:id").get(async (req, res) => {
@@ -122,5 +122,44 @@ accountRoutes.route("/accounts/:id").get(async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+// Get random work from DB and return
+accountRoutes.route("/get-word").get(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb("languageApp");
+        const result = await db_connect.collection("words").find({}).toArray();
+        const randomWord = result[Math.floor(Math.random() * result.length)]
+        res.json(randomWord);
+    } catch (err) {
+        throw err;
+    }
+});
+
+accountRoutes.route("/get-word/create").post(async (req, res) => {
+    try {
+        let db_connect = dbo.getDb();
+        let myobj = {
+            english: req.body.english,
+            spanish: req.body.spanish,
+            partOfSpeech: req.body.partOfSpeech,
+        };
+        const findWord = await db_connect.collection("words").findOne({ english: myobj.english });
+        if (findWord) {
+            // if username exists, do not create duplicate account
+            res.status(400).json({ message: "Word is already in database" });
+        } else {
+            // return success message
+            const result = db_connect.collection("words").insertOne(myobj);
+            console.log("Added a word");
+            //res.status(201).json({ message: "Word added", word: result.ops[0] });
+            res.status(201).json(result);
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Post
 
 module.exports = accountRoutes;

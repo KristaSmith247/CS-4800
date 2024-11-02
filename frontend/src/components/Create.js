@@ -77,14 +77,14 @@ export default function Create() {
 					return;
 				});
 
-				console.log("Response");
-				console.log(response);
+				// console.log("Response");
+				// console.log(response);
 
-				if (!response.ok) {
-					const message = `An error has occurred: ${response.statusText}`;
-					window.alert(message);
-					return;
-				}
+				// if (!response.ok) {
+				// 	const message = `An error has occurred: ${response.statusText}`;
+				// 	window.alert(message);
+				// 	return;
+				// }
 
 				const account = await response.json();
 
@@ -93,7 +93,7 @@ export default function Create() {
 				setForm({ username: "", password: "", type: "" });
 
 				if (account.message == null) {
-					navigate(-1);
+					//navigate(-1);
 					console.log("Account message null");
 				} else {
 					console.log("There is an error");
