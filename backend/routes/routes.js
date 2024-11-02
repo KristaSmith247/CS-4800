@@ -79,7 +79,7 @@ accountRoutes.route("/accounts/create").post(async (req, res) => {
             // return success message
             const result = db_connect.collection("accounts").insertOne(myobj);
             console.log("Created an account");
-            res.status(201).json({ message: "Account created", user: result.ops[0] });
+            res.status(201).json({ message: "Account created", account: result.ops[0] });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });

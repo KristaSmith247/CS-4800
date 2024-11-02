@@ -89,7 +89,8 @@ export default function Create() {
 				const account = await response.json();
 
 				console.log("From create: ");
-				console.log("Account: ", account);
+				console.log(account);
+
 				setForm({ username: "", password: "", type: "" });
 
 				if (account.message == null) {
