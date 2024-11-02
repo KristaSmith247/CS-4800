@@ -83,6 +83,11 @@ export default function Login() {
 			<div className="footer">
 				<p>Copyright &copy; 2024 Language App</p>
 			</div>
+
+			<label>TESTING PURPOSES</label>
+			<button>
+				<a href="/addword">Add Word</a>
+			</button>
 		</div>
 	); // end of return
 } // end of function

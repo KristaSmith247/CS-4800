@@ -31,7 +31,7 @@ const dbo = require("./db/conn");
 
 app.use(require("./routes/routes"));
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
 	res.send("Hello World");

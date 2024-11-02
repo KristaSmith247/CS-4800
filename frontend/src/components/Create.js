@@ -1,8 +1,6 @@
 import "./Create.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import axios from 'axios';
-//import { ReactSession } from "react-client-session";
 
 export default function Create() {
 	const [form, setForm] = useState({
@@ -26,11 +24,6 @@ export default function Create() {
 		let usernameCheck, passwordCheck, typeCheck = 1;
 
 		console.log("In onSubmit");
-
-		// ReactSession.setStoreType("sessionStorage");
-		// ReactSession.set("username", form.username);
-		// console.log("Username: " + ReactSession.get("username"));
-
 		console.log(form);
 
 		// username check
@@ -58,65 +51,54 @@ export default function Create() {
 			passwordCheck = 1;
 		}
 
-		if (usernameCheck === 0 && passwordCheck === 0) {
+		if (usernameCheck === 0 && passwordCheck === 0 && typeCheck === 0) {
 			console.log("No errors in form");
 			const newAccount = { ...form };
 			delete newAccount.message;
 
 			console.log("New account");
 			console.log(newAccount);
-			try {
-				const response = await fetch("http://localhost:4000/accounts/create", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(newAccount),
-				}).catch((error) => {
+			async function createAccount() {
+				try {
+					const response = await fetch("http://localhost:4000/accounts/create", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(newAccount),
+					}).catch((error) => {
+						window.alert(error);
+						return;
+					});
+
+					// console.log("Response");
+					// console.log(response);
+
+					// if (!response.ok) {
+					// 	const message = `An error has occurred: ${response.statusText}`;
+					// 	window.alert(message);
+					// 	return;
+					// }
+
+					const account = await response.json();
+
+					console.log("From create: ");
+
+					setForm({ username: "", password: "", confirmPassword: "", type: "" });
+
+					if (account.message == null) {
+						//navigate(-1);
+						console.log("Account message null");
+					} else {
+						console.log("There is an error");
+					}
+				}
+				catch (error) {
 					window.alert(error);
 					return;
-				});
-
-				// console.log("Response");
-				// console.log(response);
-
-				// if (!response.ok) {
-				// 	const message = `An error has occurred: ${response.statusText}`;
-				// 	window.alert(message);
-				// 	return;
-				// }
-
-				const account = await response.json();
-
-				console.log("From create: ");
-				console.log(account);
-
-				setForm({ username: "", password: "", type: "" });
-
-				if (account.message == null) {
-					//navigate(-1);
-					console.log("Account message null");
-				} else {
-					console.log("There is an error");
 				}
 			}
-			catch (error) {
-				window.alert(error);
-				return;
-			}
-
-
-			// axios.post('http://localhost:4000/accounts/create', { form })
-			// 	.then(result => {
-			// 		console.log(result);
-			// 		const account = result.json();
-			// 	})
-			// 	.catch(err => {
-			// 		console.log(err);
-			// 		return;
-			// 	});
-
-
+			createAccount();
 		}
 	}
 
@@ -132,6 +114,7 @@ export default function Create() {
 					type="text"
 					placeholder="Please enter username"
 					name="username"
+					value={form.username}
 					onChange={(e) => updateForm({ username: e.target.value })}
 					required
 				/>
@@ -143,6 +126,7 @@ export default function Create() {
 					id="password"
 					type="text"
 					placeholder="Please enter password"
+					value={form.password}
 					onChange={(e) => updateForm({ password: e.target.value })}
 					required
 				/>
@@ -152,6 +136,7 @@ export default function Create() {
 					id="confirmPassword"
 					type="text"
 					placeholder="Please confirm password"
+					value={form.confirmPassword}
 					onChange={(e) => updateForm({ confirmPassword: e.target.value })} required />
 
 				<label htmlFor="type" className="form-label">
@@ -169,7 +154,6 @@ export default function Create() {
 					<option value="travel">Travel</option>
 				</select>
 				<br />
-				{/* <input type="submit" value="Create Account" /> */}
 				<button type="submit" value="Create Account" onClick={handleSubmit}>Create Account</button>
 			</form>
 			{invalidMessage}

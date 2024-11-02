@@ -78,8 +78,13 @@ accountRoutes.route("/accounts/create").post(async (req, res) => {
         } else {
             // return success message
             const result = db_connect.collection("accounts").insertOne(myobj);
-            console.log("Created an account");
-            res.status(201).json({ message: "Account created", account: result.ops[0] });
+            if (result) {
+                console.log("Created an account");
+                res.status(201).json({ message: "Account created", account: result.ops[0] });
+            } else {
+                console.log("Failed to create an account");
+                res.status(500).json({ message: "Something went wrong with the insertion" });
+            }
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -143,6 +148,7 @@ accountRoutes.route("/get-word/create").post(async (req, res) => {
             english: req.body.english,
             spanish: req.body.spanish,
             partOfSpeech: req.body.partOfSpeech,
+            // db: res.body.db,
         };
         const findWord = await db_connect.collection("words").findOne({ english: myobj.english });
         if (findWord) {
@@ -152,8 +158,8 @@ accountRoutes.route("/get-word/create").post(async (req, res) => {
             // return success message
             const result = db_connect.collection("words").insertOne(myobj);
             console.log("Added a word");
-            //res.status(201).json({ message: "Word added", word: result.ops[0] });
-            res.status(201).json(result);
+            res.status(201).json({ message: "Word added", word: result.ops[0] });
+            //res.status(201).json(result);
         }
     } catch (err) {
         res.status(500).json({ error: err.message });

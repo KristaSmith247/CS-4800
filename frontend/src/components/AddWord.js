@@ -8,6 +8,7 @@ export default function AddWord() {
         english: "",
         spanish: "",
         partOfSpeech: "", // tells if noun, adjective, etc
+        // db: "",
         message: "", // return if sucessful or error
     });
     const [invalidMessage, setInvalidMessage] = useState("");
@@ -25,7 +26,7 @@ export default function AddWord() {
         console.log("In onSubmit - add word");
         console.log(form);
 
-        let englishCheck, spanishCheck, partOfSpeechCheck = 1;
+        let englishCheck, spanishCheck, partOfSpeechCheck, dbCheck = 1;
 
         // english check
         if (!form.english) {
@@ -48,6 +49,13 @@ export default function AddWord() {
         } else {
             partOfSpeechCheck = 0;
         }
+
+        // if (!form.db) {
+        //     dbCheck = 1;
+        //     setInvalidMessage("Please enter the db this should be a part of.");
+        // } else {
+        //     dbCheck = 0;
+        // }
 
 
         console.log(form);
@@ -86,8 +94,8 @@ export default function AddWord() {
 
                     console.log("From create word: ");
                     console.log("Word: ", word);
-                    setForm({ english: "", spanish: "", partOfSpeech: "" });
 
+                    setForm({ english: "", spanish: "", partOfSpeech: "" });
                     if (word.message == null) {
                         //navigate(-1);
                         console.log("Word message null");
@@ -96,12 +104,14 @@ export default function AddWord() {
                     }
                 }
                 catch (error) {
+
                     window.alert(error);
                     return;
                 }
 
             }
             createWord();
+
         }
     }
 
@@ -117,6 +127,7 @@ export default function AddWord() {
                     type="text"
                     placeholder="Please enter an English translation."
                     name="english"
+                    value={form.english}
                     onChange={(e) => updateForm({ english: e.target.value })}
                     required
                 />
@@ -128,6 +139,7 @@ export default function AddWord() {
                     id="spanish"
                     type="text"
                     placeholder="Please enter a Spanish translation."
+                    value={form.spanish}
                     onChange={(e) => updateForm({ spanish: e.target.value })}
                     required
                 />
@@ -137,9 +149,22 @@ export default function AddWord() {
                     id="partOfSpeech"
                     type="text"
                     placeholder="Please enter a part of speech"
+                    value={form.partOfSpeech}
                     onChange={(e) => updateForm({ partOfSpeech: e.target.value })} required />
+
+                {/* <label htmlFor="db" className="form-label">
+                    Database
+                </label>
+                <input
+                    id="db"
+                    type="text"
+                    placeholder="Please enter the database."
+                    name="db"
+                    onChange={(e) => updateForm({ db: e.target.value })}
+                    required
+                /> */}
                 <br />
-                <button type="submit" value="Create Account" onClick={handleSubmit}>Add Word</button>
+                <button type="submit" value="addWord" onClick={handleSubmit}>Add Word</button>
             </form>
             {invalidMessage}
         </div>
